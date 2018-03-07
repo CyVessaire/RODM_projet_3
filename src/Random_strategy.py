@@ -38,10 +38,10 @@ def evolution(graphe, nb_max_test = None):
             PlotList.append([test_count, count])
             efficiency_list.append([test_count, liste_node[0], liste_node[1]])
 
-    plt.scatter(*zip(*PlotList))
-    plt.show()
-    m = sum([len(a) for a in graph])/2
-    print(TP.efficiency_strat(efficiency_list,len(graph), m))
+    #plt.scatter(*zip(*PlotList))
+    #plt.show()
+    m = sum([len(a) for a in graphe])/2
+    #print(TP.efficiency_strat(efficiency_list,len(graphe), m))
     return efficiency_list
 
 if __name__ == "__main__":

@@ -50,7 +50,10 @@ def efficiency_worst_best_ran(n,m,t):
   x = t*m*2.0/(n*(n-1))
   if t<m:
     return (t*(t+1)*1.0/2 , t*(t+1)*1.0/2 , x*(x+1)/2.0 * t*1.0/x)
-  return (m*(m+1)*1.0/2 , m*(m+1)*1.0/2 + m*(t-m) , x*(x+1)/2.0 * t*1.0/x)
+  elif t<(n**2-n)/2-m:
+    return (0 , m*(m+1)*1.0/2 + m*(t-m) , x*(x+1)/2.0 * t*1.0/x)
+  y = t-(n**2-n)/2+m
+  return (y*(y+1)*1.0/2 , m*(m+1)*1.0/2 + m*(t-m) , x*(x+1)/2.0 * t*1.0/x)
 
 def efficiency_strat(file_res, n, m):
   nb_found = 0
@@ -111,28 +114,36 @@ def strat_complete(graph,k,nb_max_test):
 def plot_efficiency_curve(file_res):
   times = [a[0] for a in file_res]
   plt.plot(times, [i for i in range(len(times))])
-  plt.show()
+  #plt.show()
 
 
 def compare_strat(graph,t):
-  fr_random = rs.evolution(graph
+  n = len(graph)
+  m = sum([len(a) for a in graph])/2
+  fr_random = rs.evolution(graph,t)
+  fr_complete = strat_complete(graph,1000,t)
+  print(efficiency_strat(fr_random, n, m))
+  print(efficiency_strat(fr_complete, n, m))
+  plot_efficiency_curve(fr_random)
+  plot_efficiency_curve(fr_complete)
+  plt.show()
         
         
 
 if __name__ == "__main__":
 
   graph = read_file("../dataset/Flickr-test")
-  print(sum([len(a)==0 for a in graph]))
-  print(density(graph))
-  print(average_degree(graph))
-  print(clustering_coeff(graph))
-  list_nodes = [i for i in range(len(graph))]
-  order_nodes(list_nodes, graph)
-  print(list_nodes)
-  print([len(graph[x]) for x in list_nodes])
+  #print(density(graph))
+  #print(average_degree(graph))
+  #print(clustering_coeff(graph))
+  #list_nodes = [i for i in range(len(graph))]
+  #order_nodes(list_nodes, graph)
+  #print(list_nodes)
+  #print([len(graph[x]) for x in list_nodes])
 
-  file_res = strat_complete(graph,1000,5000)
-  plot_efficiency_curve(file_res)
+  #file_res = strat_complete(graph,1000,5000)
+  #plot_efficiency_curve(file_res)
+  compare_strat(graph,5000)
 
 
 
