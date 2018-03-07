@@ -127,6 +127,61 @@ def compare_strat(graph,t):
   plot_efficiency_curve(fr_random)
   plot_efficiency_curve(fr_complete)
   plt.show()
+
+def new_strat(graph,t,k=0,alpha=1):
+  assert k<=t,"k must verify k<=t"
+  n = len(graph)
+  print(n)
+  list_discover = []
+  list_nodes = [i for i in range(n)]
+  shuffle(list_nodes)
+  list_nb_test = [1]*n
+  list_nb_found = [0]*n
+  tested = np.zeros((n,n))
+  found_graph = []
+  for i in range(n):
+    found_graph.append([])
+  for i in range(k):
+    u,v = randint(0,n-1),randint(0,n-1)
+    while tested[u,v]:
+      u,v = randint(0,n-1),randint(0,n-1)
+    tested[u,v] = 1
+    tested[v,u] = 1
+    list_nb_test[u]+=1
+    list_nb_test[v]+=1
+    if u in graph[v]:
+      list_discover.append((i,u,v))
+      found_graph[u].append(v)
+      found_graph[v].append(u)
+      list_nb_found[u]+=1
+      list_nb_found[v]+=1
+  nb_test = k
+  while nb_test<t:
+    list_nodes.sort(key = lambda x : list_nb_found[x]*1.0/list_nb_test[x] + (1 - list_nb_test[x]*1.0/n)*alpha)
+    list_nodes.reverse()
+    i = 0
+    while list_nb_test[list_nodes[i]]==n:
+      i+=1
+    node = list_nodes[i]
+    #print(node,list_nb_found[node],list_nb_test[node],list_nb_found[node]*1.0 + (1 - list_nb_test[node]*1.0/n)*alpha)
+    i = randint(0,n-1)
+    while tested[node,i]:
+      i = randint(0,n-1)
+    tested[node,i] = 1
+    tested[i,node] = 1
+    list_nb_test[i] += 1
+    list_nb_test[node] += 1
+    nb_test += 1
+    assert list_nb_found[node]==len(found_graph[node]),"dfzefdze"
+    if i in graph[node]:
+      list_discover.append((nb_test,node,i))
+      found_graph[node].append(i)
+      found_graph[i].append(node)
+      list_nb_found[i]+=1
+      list_nb_found[node]+=1
+  print(list_nb_test)
+  return list_discover
+  
         
         
 
@@ -141,9 +196,14 @@ if __name__ == "__main__":
   #print(list_nodes)
   #print([len(graph[x]) for x in list_nodes])
 
-  #file_res = strat_complete(graph,1000,5000)
-  #plot_efficiency_curve(file_res)
-  compare_strat(graph,5000)
+  file_res = new_strat(graph,10000,1000,0.1)
+  plot_efficiency_curve(file_res)
+  file_res = rs.evolution(graph,10000)
+  plot_efficiency_curve(file_res)
+  file_res = strat_complete(graph,1000,10000)
+  plot_efficiency_curve(file_res)
+  plt.show()
+  #compare_strat(graph,5000)
 
 
 
