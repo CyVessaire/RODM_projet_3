@@ -22,7 +22,7 @@ def read_file(string):
     
 
 def density(graph):
-  nb_sommet = len(graph)
+  n = len(graph)
   nb_arete = sum([len(a) for a in graph])
   nb_max = (n**2-n)*1.0/2
   return nb_arete*1.0/nb_max
@@ -62,10 +62,47 @@ def efficiency_strat(file_res, n, m):
   ew,eb,er = efficiency_worst_best_ran(n,m,old_t)
   return (integral - ew)*1.0/(eb - ew)
 
+def order_nodes(list_nodes, gaph):
+  list_nodes.sort(key = lambda x : len(graph[x]))
+  list_nodes.reverse()
+
+def strat_complete(graph,k):
+  list_discover = []
+  n = len(graph)
+  tested = np.zeros((n,n))
+  found_graph = []
+  for i in range(n):
+    found_graph.append([])
+  for i in range(k):
+    u,v = randint(0,n-1),randint(0,n-1)
+    if u in graph[v]:
+      list_discover.append((i,u,v))
+      found_graph[u].append(v)
+      found_graph[v].append(u)
+  list_nodes = [i for i in range(n)]
+  
+      
+
 
 graph = read_file("/home/l/lamothe/3 A/RODM/RODM_projet_3/dataset/Flickr-test")
+print(sum([len(a)==0 for a in graph]))
 print(density(graph))
 print(average_degree(graph))
 print(clustering_coeff(graph))
+list_nodes = [i for i in range(len(graph))]
+order_nodes(list_nodes, graph)
+print(list_nodes)
+print([len(graph[x]) for x in list_nodes])
+
+
+
+
+
+
+
+
+
+
+
     
   

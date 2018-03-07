@@ -62,10 +62,70 @@ def efficiency_strat(file_res, n, m):
   ew,eb,er = efficiency_worst_best_ran(n,m,old_t)
   return (integral - ew)*1.0/(eb - ew)
 
+def order_nodes(list_nodes, gaph):
+  list_nodes.sort(key = lambda x : len(graph[x]))
+  list_nodes.reverse()
+
+def strat_complete(graph,k,nb_max_test):
+  list_discover = []
+  n = len(graph)
+  tested = np.zeros((n,n))
+  found_graph = []
+  for i in range(n):
+    found_graph.append([])
+  for i in range(k):
+    u,v = randint(0,n-1),randint(0,n-1)
+    while tested[u,v]:
+      u,v = randint(0,n-1),randint(0,n-1)
+    tested[u,v] = 1
+    tested[v,u] = 1
+    if u in graph[v]:
+      list_discover.append((i,u,v))
+      found_graph[u].append(v)
+      found_graph[v].append(u)
+  nb_test = k
+  list_nodes = [i for i in range(n)]
+  done_node = [0]*n
+  while nb_test<nb_max_test:
+    order_nodes(list_nodes,found_graph)
+    i = 0
+    while done_node[list_nodes[i]]:
+      i+=1
+    node = list_nodes[i]
+    done_node[node] = 1
+    for i in range(n):
+      if not tested[node,i]:
+        tested[node,i] = 1
+        tested[i,node] = 1
+        nb_test += 1
+        if i in graph[node]:
+          list_discover.append((nb_test,node,i))
+          found_graph[node].append(i)
+          found_graph[i].append(node)
+  return list_discover
+        
+        
+
 
 graph = read_file("/home/l/lamothe/3 A/RODM/RODM_projet_3/dataset/Flickr-test")
+print(sum([len(a)==0 for a in graph]))
 print(density(graph))
 print(average_degree(graph))
 print(clustering_coeff(graph))
+list_nodes = [i for i in range(len(graph))]
+order_nodes(list_nodes, graph)
+print(list_nodes)
+print([len(graph[x]) for x in list_nodes])
+
+
+
+
+
+
+
+
+
+
+
     
   
