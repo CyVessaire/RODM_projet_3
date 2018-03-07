@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from random import *
 from time import *
+import Random_strategy as rs
 
 def read_file(string):
   graph = []
@@ -19,11 +20,11 @@ def read_file(string):
       graph[u].append(v)
       graph[v].append(u)
   return graph
-    
+
 
 def density(graph):
   n = len(graph)
-  nb_arete = sum([len(a) for a in graph])
+  nb_arete = sum([len(a) for a in graph])/2
   nb_max = (n**2-n)*1.0/2
   return nb_arete*1.0/nb_max
 
@@ -46,9 +47,10 @@ def clustering_coeff(graph):
 
 
 def efficiency_worst_best_ran(n,m,t):
+  x = t*m*2.0/(n*(n-1))
   if t<m:
-    return (t*(t+1)*1.0/2 , t*(t+1)*1.0/2 , t*m*2.0/(n*(n-1)))
-  return (m*(m+1)*1.0/2 , m*(m+1)*1.0/2 + m(t-m) , t*m*2.0/(n*(n-1)))
+    return (t*(t+1)*1.0/2 , t*(t+1)*1.0/2 , x*(x+1)/2.0 * t*1.0/x)
+  return (m*(m+1)*1.0/2 , m*(m+1)*1.0/2 + m*(t-m) , x*(x+1)/2.0 * t*1.0/x)
 
 def efficiency_strat(file_res, n, m):
   nb_found = 0
@@ -60,7 +62,7 @@ def efficiency_strat(file_res, n, m):
     old_t = t
   integral += nb_found
   ew,eb,er = efficiency_worst_best_ran(n,m,old_t)
-  return (integral - ew)*1.0/(eb - ew)
+  return ((integral - ew)*1.0/(eb - ew), integral)
 
 def order_nodes(list_nodes, gaph):
   list_nodes.sort(key = lambda x : len(graph[x]))
@@ -129,3 +131,4 @@ print([len(graph[x]) for x in list_nodes])
 
     
   
+
