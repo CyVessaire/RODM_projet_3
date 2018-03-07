@@ -95,7 +95,9 @@ def strat_complete(graph,k,nb_max_test):
       i+=1
     node = list_nodes[i]
     done_node[node] = 1
-    for i in range(n):
+    order = [i for i in range(n)]
+    shuffle(order)
+    for i in order:
       if not tested[node,i]:
         tested[node,i] = 1
         tested[i,node] = 1
@@ -105,19 +107,32 @@ def strat_complete(graph,k,nb_max_test):
           found_graph[node].append(i)
           found_graph[i].append(node)
   return list_discover
+
+def plot_efficiency_curve(file_res):
+  times = [a[0] for a in file_res]
+  plt.plot(times, [i for i in range(len(times))])
+  plt.show()
+
+
+def compare_strat(graph,t):
+  fr_random = rs.evolution(graph
         
         
 
+if __name__ == "__main__":
 
-graph = read_file("/home/l/lamothe/3 A/RODM/RODM_projet_3/dataset/Flickr-test")
-print(sum([len(a)==0 for a in graph]))
-print(density(graph))
-print(average_degree(graph))
-print(clustering_coeff(graph))
-list_nodes = [i for i in range(len(graph))]
-order_nodes(list_nodes, graph)
-print(list_nodes)
-print([len(graph[x]) for x in list_nodes])
+  graph = read_file("../dataset/Flickr-test")
+  print(sum([len(a)==0 for a in graph]))
+  print(density(graph))
+  print(average_degree(graph))
+  print(clustering_coeff(graph))
+  list_nodes = [i for i in range(len(graph))]
+  order_nodes(list_nodes, graph)
+  print(list_nodes)
+  print([len(graph[x]) for x in list_nodes])
+
+  file_res = strat_complete(graph,1000,5000)
+  plot_efficiency_curve(file_res)
 
 
 

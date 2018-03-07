@@ -24,7 +24,7 @@ def evolution(graphe, nb_max_test = None):
     n = len(graphe)
     L = Random_strategy(n)
     if nb_max_test == None:
-      nb_max_test = len(L)+2
+      nb_max_test = len(L)
     PlotList = [[0,0]]
     efficiency_list = []
     test_count = 0
