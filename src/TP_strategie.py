@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from random import *
 from time import *
 import Random_strategy as rs
+import TBF_strat as TBF
 
 def read_file(string):
   graph = []
@@ -177,10 +178,10 @@ def new_strat(graph,t,t2,k=0,alpha=0.5,beta=3):
       found_graph[sec_node].append(node)
       list_nb_found[sec_node]+=1
       list_nb_found[node]+=1
-  
+
   shuffle(list_nodes)
   while nb_test<t2 or list_nodes==[]:
-    
+
     node = list_nodes.pop(0)
     i = 0
     while len(found_graph[node])<2:
@@ -202,9 +203,9 @@ def new_strat(graph,t,t2,k=0,alpha=0.5,beta=3):
             found_graph[neigh2].append(neigh1)
 
   return list_discover
-  
-        
-        
+
+
+
 
 if __name__ == "__main__":
 
@@ -217,29 +218,23 @@ if __name__ == "__main__":
   #print(list_nodes)
   #print([len(graph[x]) for x in list_nodes])
 
-  file_res = new_strat(graph,40000,40000,0,0.5,0)
+  file_res = new_strat(graph,40000,40000,0,0.5,2)
   plot_efficiency_curve(file_res)
-  file_res = new_strat(graph,40000,40000,0,0.5,10)
-  plot_efficiency_curve(file_res)
-  file_res = new_strat(graph,40000,40000,0,0.5,100)
-  plot_efficiency_curve(file_res)
+  # file_res = new_strat(graph,40000,40000,0,0.5,10)
+  # plot_efficiency_curve(file_res)
+  # file_res = new_strat(graph,40000,40000,0,0.5,100)
+  # plot_efficiency_curve(file_res)
   file_res = rs.evolution(graph,40000)
   plot_efficiency_curve(file_res)
-  file_res = strat_complete(graph,1000,40000)
+  file_res = strat_complete(graph,2000,40000)
+  plot_efficiency_curve(file_res)
+  file_res = TBF.tbf_strat(graph,2000,40000)
+  plot_efficiency_curve(file_res)
+  file_res = TBF.tbf_complete_strat(graph,2000,40000)
+  plot_efficiency_curve(file_res)
+  file_res = TBF.triangle_strat(graph,4000,40000)
+  plot_efficiency_curve(file_res)
+  file_res = TBF.triangle_complete_strat(graph,4000,40000)
   plot_efficiency_curve(file_res)
   plt.show()
   #compare_strat(graph,5000)
-
-
-
-
-
-
-
-
-
-
-
-    
-  
-
