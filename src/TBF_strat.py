@@ -20,7 +20,7 @@ def order_link(simul_graph):
 def triangle_strat(graph,k,nb_max_test):
     list_discover = []
     n = len(graph)
-    tested = np.zeros((n,n))
+    tested = np.zeros((n,n),dtype=bool)
     found_graph = []
     for i in range(n):
         found_graph.append([])
@@ -79,7 +79,7 @@ def triangle_strat(graph,k,nb_max_test):
 def triangle_complete_strat(graph,k,nb_max_test):
     list_discover = []
     n = len(graph)
-    tested = np.zeros((n,n))
+    tested = np.zeros((n,n),dtype=bool)
     found_graph = []
     for i in range(n):
         found_graph.append([])
@@ -97,12 +97,16 @@ def triangle_complete_strat(graph,k,nb_max_test):
 
     L = order_link(found_graph)
     print(len(L))
+    test = False
 
     while (len(L)>0 and nb_test < nb_max_test):
         edge = L.pop()[0]
         node_1 = edge[0]
         node_2 = edge[1]
-        test = False
+
+        if nb_test%10000 == 0:
+            print(nb_test)
+            print(len(L))
 
         for i in found_graph[node_1]:
             if not tested[node_2,i]:
@@ -113,6 +117,9 @@ def triangle_complete_strat(graph,k,nb_max_test):
                     found_graph[node_2].append(i)
                     found_graph[i].append(node_2)
                     test = True
+
+                if nb_test%10000 == 0:
+                    print(nb_test)
 
                 if nb_test >= nb_max_test:
                     break
@@ -127,11 +134,17 @@ def triangle_complete_strat(graph,k,nb_max_test):
                     found_graph[i].append(node_1)
                     test = True
 
+                if nb_test%10000 == 0:
+                    print(nb_test)
+
                 if nb_test >= nb_max_test:
                     break
 
-        if test:
+        if test and len(L)<=10:
             L = order_link(found_graph)
+            test = False
+
+    print("entered")
 
     if nb_test < nb_max_test:
         list_nodes = [i for i in range(n)]
@@ -139,6 +152,8 @@ def triangle_complete_strat(graph,k,nb_max_test):
         while nb_test < nb_max_test:
             TP.order_nodes(list_nodes, found_graph)
             i = 0
+            if nb_test%10000 == 0:
+                print(nb_test)
             while done_node[list_nodes[i]]:
                 i+=1
             node = list_nodes[i]
@@ -150,6 +165,10 @@ def triangle_complete_strat(graph,k,nb_max_test):
                     tested[node,i] = 1
                     tested[i,node] = 1
                     nb_test += 1
+
+                    if nb_test%10000 == 0:
+                        print(nb_test)
+
                     if i in graph[node]:
                         list_discover.append((nb_test,node,i))
                         found_graph[node].append(i)
@@ -177,7 +196,7 @@ def order_pair(simul_graph, tested):
 def tbf_strat(graph,k,nb_max_test):
     list_discover = []
     n = len(graph)
-    tested = np.zeros((n,n))
+    tested = np.zeros((n,n),dtype=bool)
     found_graph = []
     for i in range(n):
         found_graph.append([])
@@ -218,7 +237,7 @@ def tbf_strat(graph,k,nb_max_test):
 def tbf_complete_strat(graph,k,nb_max_test):
     list_discover = []
     n = len(graph)
-    tested = np.zeros((n,n))
+    tested = np.zeros((n,n),dtype=bool)
     found_graph = []
     for i in range(n):
         found_graph.append([])

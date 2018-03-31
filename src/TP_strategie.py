@@ -42,9 +42,11 @@ def clustering_coeff(graph):
         for j in range(len(graph[i])):
             for k in range(j):
                 nb_tot +=1
-                nb_found += (k in graph[j])
+                # nb_found += (k in graph[j])
+                nb_found += (graph[i][k] in graph[graph[i][j]])
         if nb_tot > 0:
             proba+= nb_found*1.0/nb_tot
+        print(i)
     return proba*1.0/len(graph)
 
 
@@ -76,7 +78,7 @@ def order_nodes(list_nodes, gaph):
 def strat_complete(graph,k,nb_max_test):
     list_discover = []
     n = len(graph)
-    tested = np.zeros((n,n))
+    tested = np.zeros((n,n),dtype=bool)
     found_graph = []
     for i in range(n):
         found_graph.append([])
@@ -139,7 +141,7 @@ def new_strat(graph,t,t2,k=0,alpha=0.5,beta=3):
     shuffle(list_nodes)
     list_nb_test = [1]*n
     list_nb_found = [0]*n
-    tested = np.zeros((n,n))
+    tested = np.zeros((n,n),dtype=bool)
     found_graph = []
     for i in range(n):
         found_graph.append([])
@@ -159,8 +161,8 @@ def new_strat(graph,t,t2,k=0,alpha=0.5,beta=3):
             list_nb_found[v]+=1
     nb_test = k
     while nb_test<t:
-        if nb_test%1000 == 0:
-            print(nb_test)
+        # if nb_test%1000 == 0:
+        #     print(nb_test)
         shuffle(list_nodes)
         list_nodes.sort(key = lambda x : list_nb_found[x]*1.0/list_nb_test[x] + (1 - list_nb_test[x]*1.0/n)*alpha)
         list_nodes.reverse()
@@ -213,16 +215,16 @@ def new_strat(graph,t,t2,k=0,alpha=0.5,beta=3):
 if __name__ == "__main__":
 
     graph = read_file("../dataset/Flickr")
-    #print(density(graph))
-    #print(average_degree(graph))
-    #print(clustering_coeff(graph))
+    print(clustering_coeff(graph))
+    print(density(graph))
+    print(average_degree(graph))
     #list_nodes = [i for i in range(len(graph))]
     #order_nodes(list_nodes, graph)
     #print(list_nodes)
     #print([len(graph[x]) for x in list_nodes])
 
-    file_res = new_strat(graph,1000000,1000000,0,0.5,2)
-    plot_efficiency_curve(file_res)
+    # file_res = new_strat(graph,1000000,1000000,0,0.5,2)
+    # plot_efficiency_curve(file_res)
     # A = np.loadtxt("../data/new_strat1.txt")
     # S = A.shape
     # print(S)
@@ -232,22 +234,112 @@ if __name__ == "__main__":
     #         print(A[i])
     #         if A[i,j] != file_res[i][j]:
     #             print("error")
-    # file_res = new_strat(graph,40000,40000,0,0.5,10)
+
+    # edge = []
+    # A = np.loadtxt("../data/tri_complete_3000000_20000000.txt")
+    # S = A.shape
+    # for i in range(S[0]):
+    #     edge.append((A[i,1],A[i,2]))
+    # A = np.rint(edge)
+    # np.savetxt("../data/graph_tri_complete_3000000_20000000.txt",A.astype(int), fmt='%i')
+    #
+    # graph = read_file("../data/graph_tri_complete_3000000_20000000.txt")
+    # # print(len(graph))
+    # print(clustering_coeff(graph))
+    # print(density(graph))
+    # print(average_degree(graph))
+
+    # file_res = []
+    # A = np.loadtxt("../data/new_strat1.txt")
+    # S = A.shape
+    # for i in range(S[0]):
+    #     file_res.append((A[i,0],A[i,1],A[i,2]))
     # plot_efficiency_curve(file_res)
-    np.savetxt("../data/new_strat1.txt",file_res)
-    # file_res = new_strat(graph,40000,40000,0,0.5,100)
+
+    # file_res = []
+    # A = np.loadtxt("../data/new_strat2.txt")
+    # S = A.shape
+    # for i in range(S[0]):
+    #     # file_res.append((A[i,0],A[i,1],A[i,2]))
     # plot_efficiency_curve(file_res)
-    # file_res = rs.evolution(graph,40000)
+    #
+    # file_res = []
+    # A = np.loadtxt("../data/new_strat3.txt")
+    # S = A.shape
+    # for i in range(S[0]):
+    #     # file_res.append((A[i,0],A[i,1],A[i,2]))
     # plot_efficiency_curve(file_res)
-    # file_res = strat_complete(graph,2000,40000)
+
+    # file_res = []
+    # A = np.loadtxt("../data/complete.txt")
+    # S = A.shape
+    # for i in range(S[0]):
+    #     file_res.append((A[i,0],A[i,1],A[i,2]))
+    # plot_efficiency_curve(file_res)
+
+    # file_res = []
+    # A = np.loadtxt("../data/tbf.txt")
+    # S = A.shape
+    # for i in range(S[0]):
+    #     file_res.append((A[i,0],A[i,1],A[i,2]))
+    # plot_efficiency_curve(file_res)
+
+    # file_res = []
+    # A = np.loadtxt("../data/tbf_complete.txt")
+    # S = A.shape
+    # for i in range(S[0]):
+    #     file_res.append((A[i,0],A[i,1],A[i,2]))
+    # plot_efficiency_curve(file_res)
+
+    # file_res = []
+    # A = np.loadtxt("../data/tri.txt")
+    # S = A.shape
+    # for i in range(S[0]):
+    #     file_res.append((A[i,0],A[i,1],A[i,2]))
+    # plot_efficiency_curve(file_res)
+
+    # file_res = []
+    # A = np.loadtxt("../data/tri_complete.txt")
+    # S = A.shape
+    # for i in range(S[0]):
+    #     file_res.append((A[i,0],A[i,1],A[i,2]))
+    # plot_efficiency_curve(file_res)
+
+    # file_res = []
+    # A = np.loadtxt("../data/random.txt")
+    # S = A.shape
+    # for i in range(S[0]):
+    #     file_res.append((A[i,0],A[i,1],A[i,2]))
+    # plot_efficiency_curve(file_res)
+
+    # file_res = []
+    # A = np.loadtxt("../data/tri_complete_10000000_1000000000.txt")
+    # S = A.shape
+    # for i in range(S[0]):
+    #     file_res.append((A[i,0],A[i,1],A[i,2]))
+    # plot_efficiency_curve(file_res)
+
+    # file_res = new_strat(graph,1000000,1000000,0,0.5,10)
+    # plot_efficiency_curve(file_res)
+    # file_res = new_strat(graph,1000000,1000000,0,0.5,100)
+    # plot_efficiency_curve(file_res)
+    # np.savetxt("../data/new_strat3.txt",file_res)
+    # file_res = TBF.triangle_strat(graph,1000000,1000000)
+    # plot_efficiency_curve(file_res)
+    # np.savetxt("../data/random.txt",file_res)
+    # file_res = strat_complete(graph,100000,1000000)
     # plot_efficiency_curve(file_res)
     # file_res = TBF.tbf_strat(graph,2000,40000)
     # plot_efficiency_curve(file_res)
     # file_res = TBF.tbf_complete_strat(graph,2000,40000)
     # plot_efficiency_curve(file_res)
-    # file_res = TBF.triangle_strat(graph,4000,40000)
+    # file_res = TBF.triangle_strat(graph,100000,1000000)
     # plot_efficiency_curve(file_res)
-    # file_res = TBF.triangle_complete_strat(graph,4000,40000)
+    # file_res = TBF.triangle_complete_strat(graph,3000000,100000000)
     # plot_efficiency_curve(file_res)
-    plt.show()
+    # np.savetxt("../data/tri_complete_3000000_100000000.txt",file_res)
+    # file_res = strat_complete(graph,3000000,100000000)
+    # plot_efficiency_curve(file_res)
+    # np.savetxt("../data/complete_3000000_100000000.txt",file_res)
+    # plt.show()
     #compare_strat(graph,5000)
